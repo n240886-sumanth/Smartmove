@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SMARTMOVE</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial;background:#f0f5f6;color:#173344}
+header{background:#102c43;color:white;padding:24px 18px;border-radius:0 0 24px 24px}
+header h1{margin:0;color:#65d6b5}
+header p{font-size:13px;color:#d1e5ed}
+main{padding:18px;max-width:480px;margin:auto}
+h2{font-size:22px}
+.subtitle{color:#71828b;font-size:13px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.tile{background:white;border:1px solid #e0e9eb;border-radius:16px;padding:17px 12px;text-align:left;min-height:115px;cursor:pointer;color:#173344}
+.tile:active{transform:scale(.97)}
+.tile span{font-size:27px;display:block;margin-bottom:12px}
+.tile b{font-size:13px}
+.tile small{display:block;color:#788990;margin-top:6px;font-size:11px}
+.page{display:none}
+.page.active{display:block}
+.back{padding:10px 15px;background:#dcefeb;color:#087d70;border:0;border-radius:9px;font-weight:bold;margin-bottom:15px}
+.card{background:white;border-radius:15px;padding:16px;margin:13px 0}
+input,select{width:100%;padding:12px;border:1px solid #d6e1e4;border-radius:9px;margin:7px 0 13px;font-size:14px}
+label{font-size:13px;font-weight:bold}
+.btn{width:100%;padding:13px;background:#087f73;color:white;border:0;border-radius:10px;font-weight:bold;margin-top:8px;font-size:14px}
+.result{background:#e6f5ef;padding:13px;border-radius:10px;margin-top:13px;font-size:13px;line-height:1.7;display:none}
+.sos{display:block;margin:20px auto;background:#e34242;color:white;border:8px solid #ffdede;border-radius:50%;width:125px;height:125px;font-size:25px;font-weight:bold}
+.slots{display:flex;gap:8px}
+.slot{flex:1;padding:15px 4px;background:#e2f5e9;color:#087d70;border:1px solid #b5dfc6;border-radius:9px}
+.busy{background:#ffe8e8;color:#c33;border-color:#f2caca}
+footer{text-align:center;color:#829198;font-size:11px;padding:20px}
+</style>
+</head>
+<body>
+
+<header>
+<h1>SMARTMOVE 🚘</h1>
+<p>Your Smart Travel Companion</p>
+</header>
+
+<main>
+
+<section id="home" class="page active">
+<h2>Welcome to SMARTMOVE!</h2>
+<p class="subtitle">Where would you like to go today?</p>
+
+<div class="grid">
+<button class="tile" onclick="openPage('route')"><span>🗺️</span><b>Smart Route Planner</b><small>Fastest and safest routes</small></button>
+<button class="tile" onclick="openPage('ai')"><span>🤖</span><b>AI Travel Assistant</b><small>Traffic and alternate routes</small></button>
+<button class="tile" onclick="openPage('safety')"><span>🛡️</span><b>Safety & SOS</b><small>Emergency assistance</small></button>
+<button class="tile" onclick="openPage('tracking')"><span>🚌</span><b>Vehicle Tracking</b><small>Arrival time and delays</small></button>
+<button class="tile" onclick="openPage('fare')"><span>💰</span><b>Fare & Budget</b><small>Compare travel costs</small></button>
+<button class="tile" onclick="openPage('carpool')"><span>🚗</span><b>Smart Carpool</b><small>Share your journey</small></button>
+<button class="tile" onclick="openPage('parking')"><span>🅿️</span><b>Smart Parking</b><small>Reserve parking spaces</small></button>
+<button class="tile" onclick="openPage('roads')"><span>🚧</span><b>Road Sensors</b><small>Report damaged roads</small></button>
+</div>
+</section>
+
+<section id="route" class="page">
+<button class="back" onclick="home()">← Home</button>
+<h2>🗺️ Smart Route Planner</h2>
+<p class="subtitle">Find the best route to your destination.</p>
+<div class="card">
+<label>Starting location</label>
+<input id="from" value="IIIT Nuzvid">
+<label>Destination</label>
+<input id="to" placeholder="Enter destination">
+<button class="btn" onclick="routes()">Compare Routes</button>
+<div id="routeResult" class="result"></div>
+</div>
+</section>
+
+<section id="ai" class="page">
+<button class="back" onclick="home()">← Home</button>
+<h2>🤖 AI Travel Assistant</h2>
+<p class="subtitle">Your intelligent traffic assistant.</p>
+<div class="card">
+<h3>Current road: Heavy Traffic 🔴</h3>
+<p>Expected delay: 18 minutes</p>
+<button class="btn" onclick="show('aiResult','⚠️ Traffic detected!<br><br>Alternative route: Canal Road → Main Road.<br><br>Estimated time saved: 12 minutes.')">Find Alternative Route</button>
+<div id="aiResult" class="result"></div>
+</div>
+</section>
+
+<section id="safety" class="page">
+<button class="back" onclick="home()">← Home</button>
+<h2>🛡️ Safety & SOS</h2>
+<p class="subtitle">Emergency assistance in one tap.</p>
+<div class="card">
+<h3 style="text-align:center">Emergency SOS</h3>
+<button class="sos" onclick="show('sosResult','🚨 DEMO SOS ALERT ACTIVATED!<br><br>Emergency notification prepared.<br>Sample location: IIIT Nuzvid.<br><br>This is a simulation. No real message or location is shared.')">SOS</button>
+<div id="sosResult" class="result"></div>
+</div>
+<div class="card">
+<h3>Accident Detection</h3>
+<button class="btn" onclick="show('accResult','⚠️ Possible accident detected!<br>Emergency assistance can be requested.')">Simulate Accident Alert</button>
+<div id="accResult" class="result"></div>
+</div>
+</section>
+
+<section id="tracking" class="page">
+<button class="back" onclick="home()">← Home</button>
+<h2>🚌 Vehicle Tracking</h2>
+<div class="card">
+<h3>Campus Shuttle 02</h3>
+<p>📍 Current status: On the way</p>
+<p>⏱️ Estimated arrival: 8 minutes</p>
+<p>📌 Next stop: Main Gate</p>
+<button class="btn" onclick="show('trackResult','Location updated!<br>Campus Shuttle 02 is 8 minutes away.<br>Sample tracking data.')">Refresh Tracking</button>
+<div id="trackResult" class="result"></div>
+</div>
+</section>
+
+<section id="fare" class="page">
+<button class="back" onclick="home()">← Home</button>
+<h2>💰 Smart Fare & Budget</h2>
+<p class="subtitle">Compare different transportation options.</p>
+<div class="card">
+<label>Select distance</label>
+<select id="distance">
+<option value="5">5 KM</option>
+<option value="10">10 KM</option>
+<option value="20">20 KM</option>
+</select>
+<button class="btn" onclick="compareFare()">Compare Fares</button>
+<div id="fareResult" class="result"></div>
+</div>
+</section>
+
+<section id="carpool" class="page">
+<button class="back" onclick="home()">← Home</button>
+<h2>🚗 Smart Carpool</h2>
+<p class="subtitle">Share vehicles with people travelling your way.</p>
+<div class="card">
+<label>Your destination</label>
+<input id="destination" placeholder="Enter destination">
+<label>Departure time</label>
+<select id="time">
+<option>8:00 AM</option>
+<option>9:00 AM</option>
+<option>5:00 PM</option>
+</select>
+<button class="btn" onclick="show('poolResult','🎉 2 possible ride matches found!<br><br>Ride 1: 1 available seat.<br>Ride 2: 2 available seats.<br><br>Demo matches only. Verify rides before travelling.')">Find Carpool</button>
+<div id="poolResult" class="result"></div>
+</div>
+</section>
+
+<section id="parking" class="page">
+<button class="back" onclick="home()">← Home</button>
+<h2>🅿️ Smart Parking</h2>
+<p class="subtitle">Select an available parking space.</p>
+<div class="card">
+<h3>City Centre Parking</h3>
+<div class="slots">
+<button class="slot" onclick="park('A1')">A1<br>Available</button>
+<button class="slot busy" disabled>B1<br>Occupied</button>
+<button class="slot" onclick="park('C1')">C1<br>Available</button>
+</div>
+<div id="parkResult" class="result"></div>
+</div>
+</section>
+
+<section id="roads" class="page">
+<button class="back" onclick="home()">← Home</button>
+<h2>🚧 Road Sensors</h2>
+<p class="subtitle">Report damaged roads to the authorities.</p>
+<div class="card">
+<label>Problem</label>
+<select id="problem">
+<option>Pothole / Damaged Road</option>
+<option>Waterlogging</option>
+<option>Broken Streetlight</option>
+<option>Road Obstruction</option>
+</select>
+<label>Location</label>
+<input id="location" placeholder="Enter road name or landmark">
+<button class="btn" onclick="report()">Submit Report</button>
+<div id="roadResult" class="result"></div>
+</div>
+</section>
+
+</main>
+<footer>SMARTMOVE | Smart Transportation System<br>DT Interactive Prototype | Demo data</footer>
+
+<script>
+function openPage(id){
+document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+document.getElementById(id).classList.add('active');
+window.scrollTo(0,0);
+}
+function home(){openPage('home')}
+function show(id,msg){
+let e=document.getElementById(id);
+e.innerHTML=msg;
+e.style.display='block';
+}
+function routes(){
+let to=document.getElementById('to').value.trim();
+let from=document.getElementById('from').value.trim();
+if(!to){show('routeResult','Please enter your destination.');return}
+show('routeResult','<b>'+from+' → '+to+'</b><br><br>🟢 Fastest Route: 22 minutes<br>🔵 Safer Route: 28 minutes<br>🚌 Public Transport: 35 minutes<br><br>Sample route estimates only.');
+}
+function compareFare(){
+let d=Number(document.getElementById('distance').value);
+show('fareResult','<b>Fare Comparison for '+d+' KM</b><br><br>🚌 Bus: ₹'+(d*2)+' | '+(d*4)+' min<br>🛺 Auto: ₹'+(d*12)+' | '+(d*3)+' min<br>🚕 Cab: ₹'+(d*18)+' | '+(d*2.5)+' min<br><br>Sample fares only.');
+}
+function park(slot){
+show('parkResult','✅ Parking slot '+slot+' selected!<br>Demo reservation successful.');
+}
+function report(){
+let loc=document.getElementById('location').value.trim();
+let issue=document.getElementById('problem').value;
+if(!loc){show('roadResult','Please enter a location.');return}
+show('roadResult','✅ Sample report submitted!<br>Issue: '+issue+'<br>Location: '+loc+'<br>Reference: SM1024<br><br>Not sent to real authorities.');
+}
+</script>
+</body>
+</html>
